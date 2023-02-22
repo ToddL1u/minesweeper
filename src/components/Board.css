@@ -1,0 +1,24 @@
+.mineBoard{
+  background-color: lightgray;
+  width: 500px;
+  height: 500px;
+  margin: 10px auto;
+  padding: 20px;
+  position: relative;
+}
+
+.btn-reset{
+  float: right;
+}
+
+#mineContainer{
+  border: 1px solid black;
+  /* height: calc(100% - 20px); */
+  /* margin: 20px; */
+  /* width: 100%; */
+}
+
+.mine-8 .square-grid{
+  width: calc(100% / 8);
+  height: calc(100% / 8);
+}
