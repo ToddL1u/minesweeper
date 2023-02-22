@@ -64,17 +64,26 @@ const Board = () => {
   };
 
   const sweepMine = (x: number, y: number) => {
-    //traverse  and reveal empty 
     if(!startGame) {
       initalGame(x, y);
+      //traverse  and reveal empty square 
     } else {
       
     }
   };
 
+  const loseGame = () => {
+    alert("you lose");
+  }
+
+  function checkAjacent(x: number, y: number) {
+
+  }
+
   const flagSquare = (x: number, y: number) => {
     //traverse  and reveal empty 
   };
+  
 
 
   const squares = squareList.map((row, rowIndex) => {
@@ -83,7 +92,7 @@ const Board = () => {
         {row.map((item: any, index: number) => {
           item.x = rowIndex;
           item.y = index;
-          return <SquareGrid key={`row:${row},${index}`} data={item} onSweep={sweepMine} />;
+          return <SquareGrid key={`row:${row},${index}`} data={item} loseGame={loseGame} onSweep={sweepMine} />;
         })}
       </div>
     );

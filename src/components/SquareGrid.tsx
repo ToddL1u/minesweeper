@@ -6,9 +6,20 @@ const SquareGrid = (props: any) => {
   //use debount to check double click
   const isMine = data.isMine? 'mine': ""
   const revealed = data.reveal? 'revealed': ""
+
+  const onClickSquare = () => {
+    if(data.isMine) {
+      console.log("losing");
+      props.loseGame();
+    } else {
+      props.onSweep(data.x, data.y)
+    }
+  }
+
   return (
-    <div className={`mine-square ${isMine} ${revealed}`} onClick={() => {props.onSweep(data.x, data.y)}}>
-      <span>{data.amount}</span>
+    <div className={`mine-square ${isMine} ${revealed}`} onClick={onClickSquare}>
+      {data.flag && <div> flaged</div>}
+      {!data.flag && <span>{data.amount}</span>}
     </div>
   )
 }
