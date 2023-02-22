@@ -1,12 +1,15 @@
 import SquareGrid from "./SquareGrid";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import stateContext from "../service/StateContext";
 import "./Board.css";
+
 import SquareType from "../types";
 const Board = () => {
   const [mines, setMines] = useState(new Set());
   const [boardSize, setBoardSize] = useState(8);
   const [startGame, setStartGame] = useState(false);
   const size = 8;
+  const ctx = useContext(stateContext);
 
   //inital defaultData
   const defaultSquare = new Array(size).fill(null).map((row_item, rowIndex) => {
@@ -21,7 +24,7 @@ const Board = () => {
         reveal: false,
       };
       return data;
-    })
+    });
   });
 
   const [squareList, setSquareList] = useState(defaultSquare);
@@ -46,18 +49,17 @@ const Board = () => {
       renderlist[x][y].isMine = true;
       traverse(x, y, (position: Array<Array<number>>) => {
         position.forEach((coor) => {
-          renderlist[coor[0]][coor[1]].amount++
+          renderlist[coor[0]][coor[1]].amount++;
         });
       });
     }
     renderlist[clickX][clickY].checked = true;
     setSquareList(renderlist);
     expandArea(clickX, clickY, renderlist);
-    // sweepMine(clickX, clickY);
   };
 
+  //check boundary is all direction
   function traverse(x: number, y: number, cb?: Function) {
-    //check boundary is all direction
     let position = [
       [x, y - 1],
       [x, y + 1],
@@ -82,6 +84,8 @@ const Board = () => {
   const resetGame = () => {
     setSquareList(JSON.parse(JSON.stringify(defaultSquare)));
     setStartGame(false);
+    ctx.setLose(false);
+    ctx.setWin(false);
   };
 
   const sweepMine = (x: number, y: number) => {
@@ -93,22 +97,23 @@ const Board = () => {
   };
 
   const expandArea = (x: number, y: number, renderlist?: any) => {
-    // let renderlist = JSON.parse(JSON.stringify(squareList));
-    if(renderlist === undefined) renderlist = [...squareList];
+    if (renderlist === undefined) renderlist = [...squareList];
     let target = renderlist[x][y];
+    if(target.flag) return;
+
     target.checked = true;
     if (target.amount !== 0) {
       //2. click a sqaure with an ajance mine will clear the squares touching it
-      if(target.reveal) {
+      if (target.reveal) {
         traverse(x, y, (position: any) => {
-          for(let i = 0; i< position.length; i++) {
-            let [x,y] = position[i]
+          for (let i = 0; i < position.length; i++) {
+            let [x, y] = position[i];
             let tile = renderlist[x][y] as SquareType;
-            if(tile.isMine && !tile.flag) {
+            if (tile.isMine && !tile.flag) {
               loseGame();
               break;
             }
-            if(!tile.checked) tile.checked = true;
+            if (!tile.checked) tile.checked = true;
           }
         });
       } else {
@@ -136,7 +141,6 @@ const Board = () => {
         }
         setSquareList(list);
       };
-      // setSquareList(renderlist);
       traverse(x, y, (pos: any) => {
         checkTile(pos, renderlist);
       });
@@ -144,12 +148,13 @@ const Board = () => {
   };
 
   const loseGame = () => {
-    alert("you lose");
+    ctx.setLose(true);
   };
 
   const checkVictory = () => {
-
-  }
+    
+    ctx.setWin(true);
+  };
 
   const flagSquare = (x: number, y: number) => {
     let s: any = [...squareList];
@@ -179,11 +184,13 @@ const Board = () => {
     resetGame();
   }, []);
   return (
-    <div className="mineBoard">
-      <button className="btn-reset" onClick={resetGame} >
-        RESET
-      </button>
-      <div>Mines: 8</div>
+    <div className={`mineBoard `}>
+      <div>
+        <button className="btn-reset" onClick={resetGame}>
+          RESET
+        </button>
+        <div>Mines: 8</div>
+      </div>
       <div id="mineContainer" className={`mine-${size}`}>
         {squares}
       </div>

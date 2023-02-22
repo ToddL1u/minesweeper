@@ -9,6 +9,8 @@
 
 .btn-reset{
   float: right;
+  /* padding: 10px; */
+  border-radius: 10%;
 }
 
 #mineContainer{
@@ -17,6 +19,8 @@
   /* margin: 20px; */
   /* width: 100%; */
 }
+
+
 
 .mine-8 .square-grid{
   width: calc(100% / 8);

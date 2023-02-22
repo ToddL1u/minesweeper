@@ -1,4 +1,4 @@
-.mine-row{
+.mine-row {
   display: flex;
   width: 100%;
   height: 100%;
@@ -16,8 +16,11 @@
   font-size: 1.5rem;
 }
 
-.mine-square:hover {
-  background-color: darkgray;
+.mine-square:not(.disabled):hover {
+  background-color: yellow;
+}
+.mine-square.disabled {
+  pointer-events: none;
 }
 
 .mine {
@@ -25,9 +28,8 @@
 }
 
 .revealed {
-  background-color: yellow;
+  background-color: darkgray;
 }
-
 
 .checked {
   background-color: darkgray;
