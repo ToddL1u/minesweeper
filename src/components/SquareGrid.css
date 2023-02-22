@@ -25,7 +25,12 @@
 }
 
 .revealed {
-  background-color: black;
+  background-color: yellow;
+}
+
+
+.checked {
+  background-color: darkgray;
   pointer-events: none;
   cursor: none;
 }
