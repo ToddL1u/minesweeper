@@ -27,13 +27,13 @@ const SquareGrid = (props: any) => {
   return (
     //
     <div
-      className={`mine-square ${releavled} ${isMine} ${visited}`}
+      className={`mine-square ${releavled} ${visited}`}
       onClick={onClickSquare}
       onContextMenu={onRightClick}
     >
-      {data.amount}
+      {/* {data.amount} */}
       {data.flag && <div> 🚩</div>}
-      {/* {data.reveal && <span>{data.amount}</span>} */}
+      {data.reveal && <span>{data.amount}</span>}
     </div>
   );
 };

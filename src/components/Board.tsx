@@ -2,7 +2,6 @@ import SquareGrid from "./SquareGrid";
 import { useState, useEffect } from "react";
 import "./Board.css";
 import SquareType from "../types";
-import { render } from "@testing-library/react";
 const Board = () => {
   const [mines, setMines] = useState(new Set());
   const [boardSize, setBoardSize] = useState(8);
@@ -10,11 +9,11 @@ const Board = () => {
   const size = 8;
 
   //inital defaultData
-  const defaultSquare = new Array(size).fill(
-    new Array(size).fill(null).map(() => {
+  const defaultSquare = new Array(size).fill(null).map((row_item, rowIndex) => {
+    return new Array(size).fill(null).map((item, index) => {
       let data: SquareType = {
-        x: 0,
-        y: 0,
+        x: rowIndex,
+        y: index,
         checked: false,
         amount: 0,
         isMine: false,
@@ -23,13 +22,9 @@ const Board = () => {
       };
       return data;
     })
-  );
+  });
 
-  const [squareList, setSquareList] = useState([[]]);
-  useEffect(() => {
-    // setSquareList(defaultSquare);
-    // initalGame();
-  }, [startGame]);
+  const [squareList, setSquareList] = useState(defaultSquare);
 
   //inital after use click the first square
   const initalGame = (clickX: number, clickY: number) => {
@@ -57,6 +52,7 @@ const Board = () => {
     }
     renderlist[clickX][clickY].checked = true;
     setSquareList(renderlist);
+    expandArea(clickX, clickY, renderlist);
     // sweepMine(clickX, clickY);
   };
 
@@ -96,13 +92,28 @@ const Board = () => {
     }
   };
 
-  const expandArea = (x: number, y: number) => {
-    let renderlist = JSON.parse(JSON.stringify(squareList));
+  const expandArea = (x: number, y: number, renderlist?: any) => {
+    // let renderlist = JSON.parse(JSON.stringify(squareList));
+    if(renderlist === undefined) renderlist = [...squareList];
     let target = renderlist[x][y];
     target.checked = true;
     if (target.amount !== 0) {
       //2. click a sqaure with an ajance mine will clear the squares touching it
-      target.reveal = true;
+      if(target.reveal) {
+        traverse(x, y, (position: any) => {
+          for(let i = 0; i< position.length; i++) {
+            let [x,y] = position[i]
+            let tile = renderlist[x][y] as SquareType;
+            if(tile.isMine && !tile.flag) {
+              loseGame();
+              break;
+            }
+            if(!tile.checked) tile.checked = true;
+          }
+        });
+      } else {
+        target.reveal = true;
+      }
       setSquareList(renderlist);
     } else {
       const checkTile = (position: Array<Array<number>>, list: any) => {
@@ -110,7 +121,6 @@ const Board = () => {
         position.forEach((coor) => {
           let tile = list[coor[0]][coor[1]] as SquareType;
           if (tile.checked) return;
-          // console.log(tile.amount);
           if (tile.amount === 0) {
             tile.checked = true;
             safeSquare.push(tile);
@@ -141,8 +151,6 @@ const Board = () => {
 
   }
 
-  function checkAjacent(x: number, y: number) {}
-
   const flagSquare = (x: number, y: number) => {
     let s: any = [...squareList];
     s[x][y].flag = !s[x][y].flag;
@@ -152,12 +160,10 @@ const Board = () => {
   const squares = squareList.map((row, rowIndex) => {
     return (
       <div className="mine-row">
-        {row.map((item: any, index: number) => {
-          item.x = rowIndex;
-          item.y = index;
+        {row.map((item: SquareType) => {
           return (
             <SquareGrid
-              key={`row:${row},${index}`}
+              key={`row:${item.x},${item.y}`}
               data={item}
               loseGame={loseGame}
               onSweep={sweepMine}
