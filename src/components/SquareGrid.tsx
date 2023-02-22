@@ -6,11 +6,12 @@ const SquareGrid = (props: any) => {
   const data: SquareType = props.data;
   const ctx = useContext(stateContext);
 
-  const isMine = (ctx.isLose || ctx.isWin) && data.isMine ? "mine" : "";
+  const isMine = data.isMine? (ctx.isWin? 'is-win': (ctx.isLose? 'is-lose': '')) : ''
   const visited = data.checked ? "checked" : "";
   const releavled = data.reveal ? "revealed" : "";
 
   const onClickSquare = (e: any) => {
+    if(data.flag) return;
     if (e.detail === 1 && !data.reveal) {
       if (data.isMine) {
         props.loseGame();
@@ -24,7 +25,8 @@ const SquareGrid = (props: any) => {
 
   const onRightClick = (e: any) => {
     e.preventDefault();
-    props.onFlag(data.x, data.y);
+    if(data.reveal) return;
+    props.onFlag(data.x, data.y, data.isMine);
   };
 
   const state = ctx.isLose || ctx.isWin ? "disabled" : "";
@@ -35,7 +37,8 @@ const SquareGrid = (props: any) => {
       onClick={onClickSquare}
       onContextMenu={onRightClick}
     >
-      {data.flag && <div> 🚩</div>}
+      {data.flag && <span> 🚩</span>}
+      {ctx.isLose && data.isMine && <span>💣</span>}
       {data.reveal && <span>{data.amount}</span>}
     </div>
   );

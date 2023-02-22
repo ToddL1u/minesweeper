@@ -16,15 +16,16 @@
   font-size: 1.5rem;
 }
 
-.mine-square:not(.disabled):hover {
-  background-color: yellow;
-}
 .mine-square.disabled {
   pointer-events: none;
 }
 
-.mine {
+.is-lose {
   background-color: red;
+}
+
+.is-win {
+  background-color: yellow;
 }
 
 .revealed {

@@ -6,6 +6,7 @@ import { useState } from 'react';
 function App() {
   let [isWin, setWin] = useState(false);
   let [isLose, setLose] = useState(false);
+  
   let state = {
     isWin, isLose, setWin, setLose
   }
