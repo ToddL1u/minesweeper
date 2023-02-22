@@ -50,17 +50,13 @@ const Board = () => {
       let [x, y] = list[i] as Array<number>;
       renderlist[x][y].isMine = true;
       traverse(x, y, (position: Array<Array<number>>) => {
-        // console.log(position);
         position.forEach((coor) => {
-          setMineAmount(renderlist, coor[0], coor[1]);
+          renderlist[coor[0]][coor[1]].amount++
         });
       });
     }
     renderlist[clickX][clickY].checked = true;
     setSquareList(renderlist);
-    // setTimeout(() => {
-    //   expandArea(clickX, clickY);
-    // },100)
     // sweepMine(clickX, clickY);
   };
 
@@ -87,14 +83,6 @@ const Board = () => {
     cb && cb(position);
   }
 
-  function setMineAmount(arr: Array<Array<SquareType>>, x: number, y: number) {
-    //check boundary
-    if (x < 0 || y < 0 || x >= size || y >= size) return;
-    //caculate mine numbers
-    let obj = arr[x][y] as SquareType;
-    obj.amount++;
-  }
-
   const resetGame = () => {
     setSquareList(JSON.parse(JSON.stringify(defaultSquare)));
     setStartGame(false);
@@ -117,11 +105,11 @@ const Board = () => {
       target.reveal = true;
       setSquareList(renderlist);
     } else {
-      const checkTile = (position: Array<Array<number>>, list:any) => {
+      const checkTile = (position: Array<Array<number>>, list: any) => {
         let safeSquare: any = [];
         position.forEach((coor) => {
           let tile = list[coor[0]][coor[1]] as SquareType;
-          if(tile.checked) return;
+          if (tile.checked) return;
           // console.log(tile.amount);
           if (tile.amount === 0) {
             tile.checked = true;
@@ -130,14 +118,18 @@ const Board = () => {
             tile.reveal = true;
           }
         });
-        while(safeSquare.length > 0) {
+        while (safeSquare.length > 0) {
           let obj = safeSquare.pop();
-          traverse(obj.x, obj.y, (pos:any) => { checkTile(pos, renderlist)});
+          traverse(obj.x, obj.y, (pos: any) => {
+            checkTile(pos, renderlist);
+          });
         }
         setSquareList(list);
       };
       // setSquareList(renderlist);
-      traverse(x, y, (pos:any) => { checkTile(pos, renderlist)});
+      traverse(x, y, (pos: any) => {
+        checkTile(pos, renderlist);
+      });
     }
   };
 
@@ -145,10 +137,16 @@ const Board = () => {
     alert("you lose");
   };
 
+  const checkVictory = () => {
+
+  }
+
   function checkAjacent(x: number, y: number) {}
 
   const flagSquare = (x: number, y: number) => {
-    //traverse  and reveal empty
+    let s: any = [...squareList];
+    s[x][y].flag = !s[x][y].flag;
+    setSquareList(s);
   };
 
   const squares = squareList.map((row, rowIndex) => {
@@ -163,6 +161,7 @@ const Board = () => {
               data={item}
               loseGame={loseGame}
               onSweep={sweepMine}
+              onFlag={flagSquare}
             />
           );
         })}
@@ -175,7 +174,7 @@ const Board = () => {
   }, []);
   return (
     <div className="mineBoard">
-      <button className="btn-reset" onClick={resetGame}>
+      <button className="btn-reset" onClick={resetGame} >
         RESET
       </button>
       <div>Mines: 8</div>
