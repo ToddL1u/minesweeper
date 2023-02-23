@@ -1,4 +1,4 @@
-import SquareGrid from "./SquareGrid";
+import Tile from "./Tile";
 import { useState, useEffect, useContext } from "react";
 import stateContext from "../service/StateContext";
 import MessageModal from './MessageModal'
@@ -55,7 +55,7 @@ const Board = (props: any) => {
       let i = item.split(",");
       return [parseInt(i[0]), parseInt(i[1])]
     });
-    let renderlist = [...defaultSquare];
+    let renderlist = [...squareList];
     for (let i = 0; i < list.length; i++) {
       let [x, y] = list[i];
       renderlist[x][y].isMine = true;
@@ -192,7 +192,7 @@ const Board = (props: any) => {
     }
   }, [visited]);
 
-  const flagSquare = (x: number, y: number, isMine: boolean) => {
+  const flagTile = (x: number, y: number, isMine: boolean) => {
     let s: any = [...squareList];
     s[x][y].flag = !s[x][y].flag;
     if (isMine) {
@@ -216,13 +216,13 @@ const Board = (props: any) => {
         left: item.x * tileSize + item.x*gap
       }
       return (
-        <SquareGrid
+        <Tile
           style={tileStyle}
           key={`row:${item.x},${item.y}`}
           data={item}
           loseGame={loseGame}
           onSweep={sweepMine}
-          onFlag={flagSquare}
+          onFlag={flagTile}
         />
       );
     });

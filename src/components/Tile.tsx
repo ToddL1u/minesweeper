@@ -1,4 +1,4 @@
-import "./SquareGrid.css";
+import "./Tile.css";
 import SquareType from "../types";
 import { useState, useContext } from "react";
 import stateContext from "../service/StateContext";
