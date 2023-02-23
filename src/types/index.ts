@@ -1,8 +1,8 @@
 type SquareType = {
   flag: boolean,
   reveal: boolean,
-  checked: boolean,
   isMine: boolean,
+  index: number,
   x: number,
   y: number,
   amount: number

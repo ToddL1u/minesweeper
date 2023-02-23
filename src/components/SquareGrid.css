@@ -1,19 +1,15 @@
-.mine-row {
-  display: flex;
-  width: 100%;
-  height: 100%;
-}
+
 .mine-square {
-  flex: 1;
-  width: 50px;
-  height: 60px;
-  border: 1px solid gray;
+  position: absolute;
+  border: 1px solid #8c6a6a;
   /* background: yellow; */
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 1.5rem;
+  border-radius: 10%;
+  transition: background-color 200ms ease-in-out;
 }
 
 .mine-square.disabled {
@@ -21,7 +17,7 @@
 }
 
 .is-lose {
-  background-color: red;
+  background-color: red!important;
 }
 
 .is-win {
@@ -30,10 +26,5 @@
 
 .revealed {
   background-color: darkgray;
-}
-
-.checked {
-  background-color: darkgray;
-  pointer-events: none;
-  cursor: none;
+  /* pointer-events: none; */
 }
